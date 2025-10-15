@@ -8,12 +8,10 @@ type Engine struct {
 }
 
 type Project struct {
-	ID       string   `json:"id"`
-	Name     string   `json:"name"`
-	Uproject string   `json:"uproject"`
-	EngineID string   `json:"engineId"`
-	Tags     []string `json:"tags,omitempty"`
-	Notes    string   `json:"notes,omitempty"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Uproject string `json:"uproject"`
+	EngineID string `json:"engineId"`
 }
 
 type Catalog struct {
@@ -21,10 +19,10 @@ type Catalog struct {
 	Projects []Project `json:"projects"`
 }
 
-func (c Catalog) FindEngine(id string) *Engine {
-	for i := range c.Engines {
-		if c.Engines[i].ID == id {
-			return &c.Engines[i]
+func (catalog Catalog) FindEngine(id string) *Engine {
+	for i := range catalog.Engines {
+		if catalog.Engines[i].ID == id {
+			return &catalog.Engines[i]
 		}
 	}
 
