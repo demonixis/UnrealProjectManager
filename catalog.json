@@ -1,0 +1,62 @@
+{
+  "engines": [
+    {
+      "id": "ue_5_4",
+      "name": "Unreal Engine 5.4",
+      "editorPath": "C:/Unreal/UE_5.4/Engine/Binaries/Win64/UnrealEditor.exe"
+    },
+    {
+      "id": "ue_5_3",
+      "name": "Unreal Engine 5.3",
+      "editorPath": "D:/Unreal/UE_5.3/Engine/Binaries/Win64/UnrealEditor.exe"
+    },
+    {
+      "id": "ue_5_2",
+      "name": "Unreal Engine 5.2",
+      "editorPath": "/opt/unreal/5.2/Engine/Binaries/Linux/UnrealEditor"
+    }
+  ],
+
+  "projects": [
+    {
+      "id": "artraining",
+      "name": "ARTraining",
+      "uproject": "E:/Projects/ARTraining/ARTraining.uproject",
+      "engineId": "ue_5_4",
+      "tags": ["vr", "simulation", "training"],
+      "notes": "Formation interactive avec suivi de séquence et streaming physique JSBSim."
+    },
+    {
+      "id": "aerosync",
+      "name": "AeroSync FS",
+      "uproject": "E:/Projects/AeroSync/AeroSync.uproject",
+      "engineId": "ue_5_4",
+      "tags": ["flight", "simulator", "vr"],
+      "notes": "Simulateur d’avion et d’hélicoptère avec support VR complet et map Cesium."
+    },
+    {
+      "id": "sandboxlab",
+      "name": "Sandbox Lab",
+      "uproject": "E:/Projects/Lab/SandboxLab.uproject",
+      "engineId": "ue_5_3",
+      "tags": ["prototype", "physics"],
+      "notes": "Projet de test interne pour les expériences physiques et le rendu Nanite."
+    },
+    {
+      "id": "cinematic_demo",
+      "name": "Cinematic Demo",
+      "uproject": "D:/Demos/Cinematic/CinematicDemo.uproject",
+      "engineId": "ue_5_2",
+      "tags": ["cinematic", "render"],
+      "notes": "Démo de rendu en temps réel avec séquenceurs, Lumen et caméra dolly."
+    },
+    {
+      "id": "plugin_tester",
+      "name": "Plugin Tester",
+      "uproject": "E:/Tools/PluginTester/PluginTester.uproject",
+      "engineId": "ue_5_3",
+      "tags": ["tools", "plugins"],
+      "notes": "Petit projet pour tester la compatibilité des plugins internes Novelab."
+    }
+  ]
+}
