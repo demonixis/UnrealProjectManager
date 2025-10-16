@@ -11,6 +11,7 @@ import (
 type AppView struct {
 	root           fyne.CanvasObject
 	List           *widget.List
+	LogText        *widget.Entry
 	RunButton      *widget.Button
 	CleanBtn       *widget.Button
 	GenerateBtn    *widget.Button
@@ -27,13 +28,14 @@ func NewAppView(engines []string) *AppView {
 	title := widget.NewLabel("Project Details")
 	title.TextStyle = fyne.TextStyle{Bold: true}
 
+	appView.LogText = widget.NewMultiLineEntry()
+	appView.LogText.SetMinRowsVisible(10)
 	appView.EngineChoice = widget.NewSelect(engines, nil)
-
 	appView.CleanBtn = widget.NewButtonWithIcon("Clean", theme.CancelIcon(), nil)
 	appView.GenerateBtn = widget.NewButtonWithIcon("Generate Solution", theme.HistoryIcon(), nil)
 	appView.BuildBtn = widget.NewButtonWithIcon("Build Sources", theme.ComputerIcon(), nil)
 	appView.RunButton = widget.NewButtonWithIcon("Run Editor", theme.ConfirmIcon(), nil)
-	appView.BuildPlatform = widget.NewButtonWithIcon("Build Project", theme.GridIcon(), nil)
+	appView.BuildPlatform = widget.NewButtonWithIcon("Build Platform", theme.GridIcon(), nil)
 	appView.PlatformChoice = widget.NewSelect([]string{"Windows", "Linux", "Mac", "Android", "iOS", "VisionOS"}, nil)
 
 	engineActs := container.New(
@@ -56,15 +58,17 @@ func NewAppView(engines []string) *AppView {
 		appView.BuildPlatform,
 	)
 
-	right := container.NewVBox(
+	right := container.New(
+		layout.NewVBoxLayout(),
 		title,
 		widget.NewSeparator(),
 		engineActs,
+		layout.NewSpacer(),
 		widget.NewSeparator(),
-		widget.NewRichTextFromMarkdown("**Project**"),
+		widget.NewRichTextFromMarkdown("**Source Management**"),
 		btns,
 		widget.NewSeparator(),
-		widget.NewRichTextFromMarkdown("**Actions**"),
+		widget.NewRichTextFromMarkdown("**Build Settings**"),
 		acts,
 	)
 
@@ -79,7 +83,7 @@ func NewAppView(engines []string) *AppView {
 		func(i widget.ListItemID, o fyne.CanvasObject) {
 			project := appView.Projects[i]
 			container := o.(*fyne.Container)
-			projectIcon := GetProjectIcon(project.Uproject, fyne.NewSize(48, 48))
+			projectIcon := GetProjectIcon(project.Uproject, fyne.NewSize(96, 96))
 			container.Objects[0] = projectIcon
 			projectNameLabel := container.Objects[1].(*widget.Label)
 			projectNameLabel.SetText(project.Name)
@@ -88,7 +92,9 @@ func NewAppView(engines []string) *AppView {
 
 	split := container.NewHSplit(appView.List, container.NewPadded(right))
 	split.SetOffset(0.65)
-	appView.root = split
+
+	mainContainer := container.NewBorder(nil, appView.LogText, nil, nil, split)
+	appView.root = mainContainer
 
 	return appView
 }
