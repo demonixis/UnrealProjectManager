@@ -2,7 +2,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"fyne.io/fyne/v2"
@@ -20,9 +19,14 @@ func main() {
 		panic(err)
 	}
 
+	var engines []string
+	for i := range catalog.Engines {
+		engines = append(engines, catalog.Engines[i].ID)
+	}
+
 	a := app.New()
 	w := a.NewWindow("Unreal Project Launcher")
-	view := NewAppView()
+	view := NewAppView(engines)
 	view.SetProjects(catalog.Projects)
 
 	var current *Project
@@ -30,18 +34,12 @@ func main() {
 	view.List.OnSelected = func(id int) {
 		p := catalog.Projects[id]
 		current = &p
-		var engineName string
-		if e := catalog.FindEngine(p.EngineID); e != nil {
-			engineName = fmt.Sprintf("%s (%s)", e.Name, e.ID)
-		} else {
-			engineName = "Unknown Engine"
-		}
-		view.ShowDetails(p, engineName)
+		view.ShowDetails(p, catalog.FindEngineIndex(p.EngineID))
 	}
 
 	view.List.OnUnselected = func(id int) { current = nil }
 
-	view.LaunchBtn.OnTapped = func() {
+	view.RunButton.OnTapped = func() {
 		if current == nil {
 			return
 		}

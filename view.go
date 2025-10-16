@@ -9,38 +9,67 @@ import (
 )
 
 type AppView struct {
-	root        fyne.CanvasObject
-	List        *widget.List
-	LaunchBtn   *widget.Button
-	OpenFolder  *widget.Button
-	OpenUProj   *widget.Button
-	EngineLabel *widget.Label
-	Projects    []Project
+	root           fyne.CanvasObject
+	List           *widget.List
+	RunButton      *widget.Button
+	CleanBtn       *widget.Button
+	GenerateBtn    *widget.Button
+	BuildBtn       *widget.Button
+	EngineChoice   *widget.Select
+	PlatformChoice *widget.Select
+	BuildPlatform  *widget.Button
+	Projects       []Project
 }
 
-func NewAppView() *AppView {
-	v := &AppView{}
+func NewAppView(engines []string) *AppView {
+	appView := &AppView{}
 
 	title := widget.NewLabel("Project Details")
 	title.TextStyle = fyne.TextStyle{Bold: true}
 
-	v.EngineLabel = widget.NewLabel("")
-	v.LaunchBtn = widget.NewButtonWithIcon("Launch Editor", theme.ConfirmIcon(), nil)
-	v.OpenFolder = widget.NewButtonWithIcon("Open Folder", theme.ConfirmIcon(), nil)
-	v.OpenUProj = widget.NewButtonWithIcon("Open Project", theme.ConfirmIcon(), nil)
+	appView.EngineChoice = widget.NewSelect(engines, nil)
 
-	btns := container.New(layout.NewGridLayout(3), v.LaunchBtn, v.OpenFolder, v.OpenUProj)
+	appView.CleanBtn = widget.NewButtonWithIcon("Clean", theme.CancelIcon(), nil)
+	appView.GenerateBtn = widget.NewButtonWithIcon("Generate Solution", theme.HistoryIcon(), nil)
+	appView.BuildBtn = widget.NewButtonWithIcon("Build Sources", theme.ComputerIcon(), nil)
+	appView.RunButton = widget.NewButtonWithIcon("Run Editor", theme.ConfirmIcon(), nil)
+	appView.BuildPlatform = widget.NewButtonWithIcon("Build Project", theme.GridIcon(), nil)
+	appView.PlatformChoice = widget.NewSelect([]string{"Windows", "Linux", "Mac", "Android", "iOS", "VisionOS"}, nil)
+
+	engineActs := container.New(
+		layout.NewGridLayout(3),
+		widget.NewLabel("Engine"),
+		appView.EngineChoice,
+		appView.RunButton,
+	)
+
+	btns := container.New(
+		layout.NewGridLayout(3),
+		appView.CleanBtn,
+		appView.GenerateBtn,
+		appView.BuildBtn)
+
+	acts := container.New(
+		layout.NewGridLayout(3),
+		widget.NewLabel("Platform"),
+		appView.PlatformChoice,
+		appView.BuildPlatform,
+	)
+
 	right := container.NewVBox(
 		title,
 		widget.NewSeparator(),
-		widget.NewRichTextFromMarkdown("**Engine**"),
-		v.EngineLabel,
+		engineActs,
 		widget.NewSeparator(),
+		widget.NewRichTextFromMarkdown("**Project**"),
 		btns,
+		widget.NewSeparator(),
+		widget.NewRichTextFromMarkdown("**Actions**"),
+		acts,
 	)
 
-	v.List = widget.NewList(
-		func() int { return len(v.Projects) },
+	appView.List = widget.NewList(
+		func() int { return len(appView.Projects) },
 		func() fyne.CanvasObject {
 			return container.New(layout.NewHBoxLayout(),
 				widget.NewIcon(theme.FileApplicationIcon()),
@@ -48,7 +77,7 @@ func NewAppView() *AppView {
 			)
 		},
 		func(i widget.ListItemID, o fyne.CanvasObject) {
-			project := v.Projects[i]
+			project := appView.Projects[i]
 			container := o.(*fyne.Container)
 			projectIcon := GetProjectIcon(project.Uproject, fyne.NewSize(48, 48))
 			container.Objects[0] = projectIcon
@@ -57,11 +86,11 @@ func NewAppView() *AppView {
 		},
 	)
 
-	split := container.NewHSplit(v.List, container.NewPadded(right))
+	split := container.NewHSplit(appView.List, container.NewPadded(right))
 	split.SetOffset(0.65)
-	v.root = split
+	appView.root = split
 
-	return v
+	return appView
 }
 
 func (v *AppView) Root() fyne.CanvasObject { return v.root }
@@ -71,6 +100,6 @@ func (v *AppView) SetProjects(ps []Project) {
 	v.List.Refresh()
 }
 
-func (v *AppView) ShowDetails(p Project, engineName string) {
-	v.EngineLabel.SetText(engineName)
+func (v *AppView) ShowDetails(p Project, engineId int) {
+	v.EngineChoice.SetSelectedIndex(engineId)
 }

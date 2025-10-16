@@ -28,3 +28,13 @@ func (catalog Catalog) FindEngine(id string) *Engine {
 
 	return nil
 }
+
+func (catalog Catalog) FindEngineIndex(id string) int {
+	for i := range catalog.Engines {
+		if catalog.Engines[i].ID == id {
+			return i
+		}
+	}
+
+	return -1
+}
